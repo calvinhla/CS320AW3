@@ -21,32 +21,27 @@ namespace Assignment3
     /// </summary>
     public partial class MainWindow : Window
     {
-        ListSortDirection SortDirection { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            var users = new List<Models.User>();
-
-            users.Add(new Models.User { Name = "Dave", Password = "1DavePwd" });
-            users.Add(new Models.User { Name = "Steve", Password = "2StevePwd" });
-            users.Add(new Models.User { Name = "Lisa", Password = "3LisaPwd" });
-            uxList.ItemsSource = users;
+        }
+        private void ToggleSubmit()
+        {
+            uxSubmit.IsEnabled = !(uxName.Text.Length == 0 || uxPassword.Text.Length == 0);
         }
 
-        private void ColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void uxSubmit_Click(object sender, RoutedEventArgs e)
         {
-            var columnHeader = e.OriginalSource as GridViewColumnHeader;
-            var sortBy = columnHeader.Content;
-            
-            if (sortBy != null)
-            {
-                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(uxList.ItemsSource);
-                view.SortDescriptions.Clear();
+            var window = new SecondWindow();
+            Application.Current.MainWindow = window;
+            Close();
+            window.Show();
+        }
 
-                SortDirection = SortDirection != ListSortDirection.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending;                
-                view.SortDescriptions.Add(new SortDescription(sortBy.ToString(), SortDirection));                
-            }
+        private void TextChangedEventHandler(object sender, TextChangedEventArgs e)
+        {
+            ToggleSubmit();
         }
     }
 }
